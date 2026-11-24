@@ -36,6 +36,6 @@ Start the game
 Click the Play button (▶) at the top center of the Unity Editor.
 
 Controls:
-Move left                    A / left arrow
-Move right                   D / right arrow
-Jump / wall release          Space
+Move left: A / left arrow
+Move right: D / right arrow
+Jump / wall release: Spacebar

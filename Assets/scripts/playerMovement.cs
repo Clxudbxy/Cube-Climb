@@ -1,22 +1,35 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
 
 public class playerMovement : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 10f;
     [SerializeField] private float jumpForce = 10f;
 
+    [Header("Health Settings")]
+    [SerializeField] private int maxHealth = 100;
+    [SerializeField] private int enemyDamage = 20;
+    [SerializeField] private float damageCooldown = 1f;
+
+    [Header("UI")]
+    [SerializeField] private TMP_Text coinText;
+    [SerializeField] private TMP_Text healthText;
 
     private Rigidbody2D rb;
     private bool isGrounded = false;
     private bool stick = false;
 
     public int coinCount = 0;
-
+    public int currentHealth;
+    private float lastDamageTime = -999f;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        currentHealth = maxHealth;
+        UpdateCoinUI();
+        UpdateHealthUI();
     }
 
     void Update()
@@ -27,7 +40,6 @@ public class playerMovement : MonoBehaviour
         {
             if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed)
                 moveInput = -1f;
-
             else if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed)
                 moveInput = 1f;
             
@@ -41,9 +53,8 @@ public class playerMovement : MonoBehaviour
             
             if (stick)
             {
-                //stick to wall for 3 seconds and then fall
+                // stick to wall for 3 seconds and then fall
             }
-
         }
         rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
     }
@@ -60,11 +71,10 @@ public class playerMovement : MonoBehaviour
             stick = true;
         }
 
-        if(collision.gameObject.tag == "coin")
+        if (collision.gameObject.CompareTag("enemy"))
         {
-            coinCount += 1;
+            TakeDamage(enemyDamage);
         }
-
     }
 
     private void OnCollisionExit2D(Collision2D collision)
@@ -78,9 +88,50 @@ public class playerMovement : MonoBehaviour
         {
             stick = false;
         }
-
-        
     }
 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("coin"))
+        {
+            coinCount += 1;
+            UpdateCoinUI();
+            Destroy(other.gameObject);
+        }
+        else if (other.CompareTag("enemy"))
+        {
+            TakeDamage(enemyDamage);
+        }
+    }
 
+    public void TakeDamage(int amount)
+    {
+        // Prevent rapid multi-hit drain in the same fraction of a second
+        if (Time.time - lastDamageTime < damageCooldown) return;
+
+        lastDamageTime = Time.time;
+        currentHealth = Mathf.Max(0, currentHealth - amount);
+        UpdateHealthUI();
+
+        if (currentHealth <= 0)
+        {
+            Debug.Log("Player defeated!");
+        }
+    }
+
+    private void UpdateCoinUI()
+    {
+        if (coinText != null)
+        {
+            coinText.text = "Coins: " + coinCount;
+        }
+    }
+
+    private void UpdateHealthUI()
+    {
+        if (healthText != null)
+        {
+            healthText.text = "Health: " + currentHealth;
+        }
+    }
 }

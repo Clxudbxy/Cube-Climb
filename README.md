@@ -14,8 +14,8 @@ A 2D vertical-climbing platformer built in Unity where players jump between plat
 1. **Clone the repository**
    Open a terminal or command prompt and run:
    ```bash
-   git clone [https://github.com/Clxudbxy/Cube-Climb.git](https://github.com/Clxudbxy/Cube-Climb.git)
-   
+   git clone https://github.com/Clxudbxy/Cube-Climb.git
+
 2. Launch Unity Hub.
 
 3. Click Add (or Add project from disk) in the top-right corner.

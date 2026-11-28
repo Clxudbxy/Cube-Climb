@@ -28,7 +28,7 @@ A 2D vertical-climbing platformer built in Unity where players jump between plat
 
 7. In the Unity Editor's Project window at the bottom, open the Assets/Scenes folder.
 
-8. Double-click Scene to load the level.
+8. Double-click Level 1 to load the level.
 
 9. Click the Play button (▶) at the top center of the Unity Editor.
 
